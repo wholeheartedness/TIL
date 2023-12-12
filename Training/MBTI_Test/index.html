@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="container">
+  <!-- 👇 main 화면 -->
+  <article class="start">
+    <h1 class="mt-5 text-center">우리 고양이는 어떤 유형일까?</h1>
+    <button type="button" class="btn btn-success mt-5" onclick='start();'> 🐈 Test Start 🐈‍⬛</button>
+  </article>
+  <!-- 👇 질문지 화면 화면 -->
+  <article class="question">
+    <div class="progress mt-5">
+      <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: calc(100/12*1%)"
+        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+    <h2 id="title" class="text-center mt-5">문제</h2>
+    <input id="type" type="hidden" value="EI">
+    <button id="A" type="button" class="btn btn-outline-success mt-5"> Warning</button>
+    <button id="B" type="button" class="btn btn-outline-success mt-3">Warning</button>
+  </article>
+  <!-- 👇 결과 화면 -->
+  <article class="result">
+    <img id="img" class="rounded-circle mt-5" src="person.jpeg" alt="">
+    <h2 id="person" class="text-center mt-5">유형 이름</h2>
+    <h3 id="explain" class="text-center mt-5">설명</h3>
+  </article>
+  <!-- 👇 질문지 점수 저장 -->
+  <input type="hidden" id="EI" value="0">
+  <input type="hidden" id="SN" value="0">
+  <input type="hidden" id="TF" value="0">
+  <input type="hidden" id="JP" value="0">
+
+
+  <!-- 👇 부트스트랩 -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
+
+  <!-- 👇 main 화면 숨기고 문제화면 나타내기-->
+  <!-- 👇 버튼 클릭에 따른 점수 가져오기-->
+  <script>
+    var num = 1;
+    var quiz = {
+      1: { "title": "집사가 사람 친구를 데리고 왔을 때 나의 반응은?🐾", "type": "EI", "A": "새사람 좋아! <br> 빨리 낚싯대를 집으라냥😽", "B": "허락도 없이 친구를 데려왔어? <br> 조용히 놀고 난 건들지마라냥😼" },
+      2: { "title": "집사가 길냥이를 줍줍해왔다. 이 때 나의 반응은?", "type": "EI", "A": "우쭈쭈 작은 리를 키티... 같이 살자냥😹", "B": "이 집에 나 이외의 고양이는 불편해. <br>불쌍하지만 잠깐만 있다가 나가라냥😿" },
+      3: { "title": "야옹야옹. 베란다 밖 저 소리는 나를 부르는 소리가 났을 때 나의 반응은?", "type": "EI", "A": "누가 울음 소리를 내었는가.<br>궁금하니 당장 다가가보자냥😸", "B": "강조되고 반복되는 소리는 고양이를 불안하게해요. <br>호다닥 숨는다냥🙀" },
+      4: { "title": "메에...메에.. 집사가 이상한 고양이 소리를 내며 나를 유인하는 것 같다", "type": "SN", "A": "집사가 이상한 소리를 배워온 듯 하다. 무시하자냥🐈", "B": "저게 뭘 의미하는 소리지? 다가가보자냥🐈‍⬛" },
+      5: { "title": "메에..아니 사실은... 집사가 주절주절 하소연을 하기 시작한다.", "type": "SN", "A": "인간 말은 몰라. 그루밍이나 하겠다냥🐾", "B": "무슨 말인지는 모르겠지만.. 일단 들어보자냥😺" },
+      6: { "title": "창 밖은 신기해. 나냥이는 사실 지금", "type": "SN", "A": "멍때리고 있지. 인간이 지나가고 있다냥..😺", "B": "저건 뭘까? 오모나 세상에 저기 냥이가 또 있어! 모든게 신기하다냥🐱" },
+      7: { "title": "집사의 주머니에서 나온 저것은 츄르!🍬", "type": "TF", "A": "이제 슬슬 츄르가 나올 시간이었지. 얼른 대령하라냥😼", "B": "세상에! 저 기다랗고 맛있는 간식을 주다니. 집사 짱짱맨이다냥😻" },
+      8: { "title": "퀡퀡 쿨럭. 집사가 큰소리로 기침을 한다. 이때 나는?", "type": "TF", "A": "집사 상태가 평소랑 다른데? 큰소리가 나니 잠시 피해있겠다냥. 몸조리 하라냥🙀", "B": "집사 상태가 평소랑 다른데? 야옹야옹 걱정된다냥 그루밍이라도 해주겠다냥 😿" },
+      9: { "title": "'너가 좋아할 것 같아서 인형 사왔어' 마음에 안드는 선물을 선물하는 집사!", "type": "TF", "A": "별론데? 관심없는데에 시간낭비하지 않아. 박스나 뜯어야겠다냥.📦 ", "B": "호오. 내껀가? 킁킁 2분 정도는 가지고 놀아주겠다냥.🐀" },
+      10: { "title": "평소와 달리 일찍 일어난 집사. 열심히 집청소를 한다", "type": "JP", "A": "이 시간에 뭐하는거지? 지금은 잘 시간이야! 다시 누우라냥😾", "B": "앗 집사가 일찍 일어나 뭔가 하고있어. 나도 따라다니면서 같이 놀거다냥😸" },
+      11: { "title": "어느샌가 길어버린 발톱... 집사 발톱깎이를 들고 다가온다", "type": "JP", "A": "빨리 끝내줘.. 불안하지만 참아보겠다냥🤝", "B": "악! 지금은 아니야! 와다다다 도망갈거다냥🐈" },
+      12: { "title": "베트남으로 여행을 떠난 집사! 사람 친구가 틈틈이 와서 나를 돌봐주고 있다.", "type": "JP", "A": "누구지? 아무도 없는 집에 모르는 사람이 오는 건 패닉이야! 집사! 빨리오라냥!", "B": "밥이랑 물은 안떨어지는군... 하지만 집사... 빨리오라냥... " }
+    }
+    var result = {
+      "ISTJ": { "person": "신중한 선배냥", "explain": "이 고양이는 항상 일을 신중하게 계획하고 진행하는 현명한 특징을 가지고 있습니다.<br>  안정적인 모습으로 다른 고양이들 사이에서도 <br>신뢰를 쌓는 데 능숙해요. <br>그래서 주변의 다른 동물들도 이 현명한 냥이에게 자주 조언을 구하곤 합니다.", "img": "person.jpeg" },
+      "ESTJ": { "person": "내동료가되라 리더냥", "explain": "리더십이 강하고 조직적인 고양이. <br> 주변의 다른 동물들을 이끄는 역할을 하며, 체계적으로 일을 처리하는 냥이에요.", "img": "person.jpeg" },
+      "ISFJ": { "person": "도와주는 친구냥", "explain": "이 고양이는 무엇이든지 도울 준비가 되어 있어요.<br> 항상 다른 고양이들에게 도움의 손길을 내밀며, <br>따뜻하고 친절한 성향으로 다양한 동물들과 소통하며 친구들을 만들어 나갑니다.", "img": "person.jpeg" },
+      "ESFJ": { "person": "인간좋아 다정냥", "explain": "따뜻하고 친절한 성격의 고양이. <br>다른 동물들과의 관계를 중요시하며, 친구들과 어울리는 것을 즐기는 냥이에요.", "img": "person.jpeg" },
+      "INTJ": { "person": "전략적인 수련냥", "explain": "문제를 해결하는 데에 창의적이고 전략적인 능력을 가진 냥이입니다.<br> 항상 새로운 아이디어와 혁신을 추구하면서<br> 주위를 지배하는 모습을 보여, 다른 동물들에게도 많은 영감을 주곤 합니다.", "img": "person.jpeg" },
+      "ENTJ": { "person": "꿈이커요 도전냥", "explain": "리더십이 강하고 조직적인 냥이. <br>주변의 다른 동물들을 이끄는 역할을 하며, 일상 생활도 체계적으로 하는 냥이입니다.", "img": "person.jpeg" },
+      "INFJ": { "person": "심오한 고민냥", "explain": "이 고양이는 깊이 생각하고 감정을 깊게 체험하는 특징이 있어요.<br> 다른 고양이들과의 상호작용에서 심미적이면서도 고요한 면을 보이며, 때로는 주변 동물들에게 조언을 해 주는 마음씨 좋은 냥이에요.", "img": "person.jpeg" },
+      "ENFJ": { "person": "포용하는 인자냥", "explain": "따뜻하고 친절한 성격의 고양이.<br> 다른 동물들과의 관계를 중요시하며,<br> 친구들과 어울리는 것을 즐기는 냥이에요.", "img": "person.jpeg" },
+      "ISTP": { "person": "모험을 즐기는 엄친냥", "explain": "이 고양이는 자유로운 영혼을 가졌습니다. <br>모험을 좋아하며 새로운 경험을 즐기는 특징이 있어요.<br> 호기심이 많아 어디든지 뛰어들며 주변을 적극적으로 탐험하는 냥이에요.", "img": "person.jpeg" },
+      "ESTP": { "person": "에너제틱 터프냥", "explain": "활기차고 적극적인 고양이. <br>에너지가 넘치며 행동을 즐기고, <br>모험을 추구하면서 자신의 열정을 주위에 전파하는 역할을 합니다.", "img": "person.jpeg" },
+      "ISFP": { "person": "게으른 예술가냥", "explain": "미적 감각이 뛰어나며 예술적인 표현을 즐기는 냥이입니다. <br>다양한 예술 활동을 통해 감정을 표현하며, <br>아름다운 행동과 미적 감각으로 주변을 화려하게 만들어 나가요.", "img": "person.jpeg" },
+      "ESFP": { "person": "둥글둥글 사교냥", "explain": "사교성이 뛰어나고 활기찬 냥이.<br> 주변 동물들과 소통하며 활발하게 즐기는 사교적인 성격을 가지고 있어요.", "img": "person.jpeg" },
+      "INTP": { "person": "지적인 물음표냥", "explain": "끊임없이 물음표를 던지며 지적인 호기심을 채우는 냥이입니다. <br>문제 해결에 대한 지적인 탐구와 호기심이 늘 가득하며, <br>주변 동물들과의 흥미로운 대화에서 항상 새로운 관점을 제시하는 냥이에요.", "img": "person.jpeg" },
+      "ENTP": { "person": "창의적인 자유파냥", "explain": "열정 넘치고 자유로운 영혼을 지닌 고양이.<br> 새로운 경험을 추구하며 <br>동료들에게 긍정적인 영향을 주는 역할을 하는 냥이에요.", "img": "person.jpeg" },
+      "INFP": { "person": "꿈꾸는 낭만냥", "explain": "이 고양이는 상상력이 풍부하고 깊은 감정을 지니고 있어요.<br> 항상 꿈을 키우며 새로운 가능성을 찾아다니며 <br>주변 동물들에게 긍정적인 에너지를 전파하는 냥이입니다.", "img": "person.jpeg" },
+      "ENFP": { "person": "열정만땅 말괄량이냥", "explain": "노는게 제일 좋아! 당신의 고양이는 낚싯대와 집사를 가장 좋아할 것 같아요", "img": "person.jpeg" }
+    }
+    function start() {
+      $(".start").hide();
+      $(".question").show();
+      next();
+    }
+
+    $("#A").click(function () {
+      var type = $("#type").val();
+      var preValue = $("#" + type).val();
+      $("#" + type).val(parseInt(preValue) + 1);
+      next();
+    });
+    $("#B").click(function () {
+      next();
+    });
+    function next() {
+      if (num == 13) {
+        $(".question").hide();
+        $(".result").show();
+        var mbti = "";
+        ($("#EI").val() < 2) ? mbti += "I" : mbti += "E";
+        ($("#SN").val() < 2) ? mbti += "N" : mbti += "S";
+        ($("#TF").val() < 2) ? mbti += "F" : mbti += "T";
+        ($("#JP").val() < 2) ? mbti += "P" : mbti += "J";
+        alert(mbti);
+        $("#img").attr("src", result[mbti]["img"]);
+        $("#person").html(result[mbti]["person"]);
+        $("#explain").html(result[mbti]["explain"]);
+      } else {
+        $(".progress-bar").attr('style', 'width: calc(100/12*' + num + '%)');
+        $("#title").html(quiz[num]["title"]);
+        $("#type").val(quiz[num]["type"]);
+        $("#A").html(quiz[num]["A"]);
+        $("#B").html(quiz[num]["B"]);
+        num++;
+      }
+    }
+  </script>
+</body>
+
+</html>
