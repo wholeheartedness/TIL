@@ -19,8 +19,8 @@
 
 | 분류         | 링크                                                                 |
 |------------|--------------------------------------------------------------------|
- | BootStrap    | [🔗]([https://github.com/wholeheartedness/TIL/tree/main/Markdown](https://github.com/wholeheartedness/TIL/tree/main/BootStrap))   |
-<br>
+| BootStrap    | [🔗]([https://github.com/wholeheartedness/TIL/tree/main/Markdown](https://github.com/wholeheartedness/TIL/tree/main/BootStrap))   |
+
 
 
 ## 📦기타
@@ -30,7 +30,7 @@
 
 <br>
 
-## 🎨 실습  
+## 🎨 실습
 
 | 날짜       | 분류            |내용| 링크                                                                         |
 |----------|---------------|----|----------------------------------------------------------------------------|
